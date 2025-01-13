@@ -19,14 +19,28 @@ void load_map(t_map *map, const char *file_path, t_player *player)
         if (map->rows == 0)
             map->cols = ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n' ? 1 : 0);
 
-        char **temp = realloc(map->map, sizeof(char *) * (map->rows + 1));
-        if (!temp)
+        // Haritayı tutacak geçici bir dizi oluşturuyoruz
+        char **new_map = malloc(sizeof(char *) * (map->rows + 1));
+        if (!new_map)
         {
             perror("Error allocating memory for map");
             exit(1);
         }
-        map->map = temp;
-        map->map[map->rows] = line;
+
+        // Önceki haritayı kopyala (bu kısım önemli)
+        for (int i = 0; i < map->rows; i++)
+        {
+            new_map[i] = map->map[i];
+        }
+
+        // Yeni satırı ekle
+        new_map[map->rows] = line;
+
+        // Eski haritayı serbest bırak ve yeni haritayı at
+        if (map->map)
+            free(map->map);
+
+        map->map = new_map;
 
         // Oyuncu pozisyonunu harita üzerinde bulalım
         for (int x = 0; x < map->cols; x++)
@@ -35,6 +49,11 @@ void load_map(t_map *map, const char *file_path, t_player *player)
             {
                 player->x = x;
                 player->y = map->rows;
+            }
+            if (line[x] == 'C')
+            {
+                map->collectables++;
+                printf("Collectable founds %d\n", map->collectables);
             }
         }
 
@@ -45,21 +64,33 @@ void load_map(t_map *map, const char *file_path, t_player *player)
 }
 
 
+
+
 void draw_map(t_game *game)
 {
-    int tile_size = 32;
-    void *wall_img = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &tile_size, &tile_size);
-    void *player_img = mlx_xpm_file_to_image(game->mlx, "textures/player.xpm", &tile_size, &tile_size);
-    void *collectible_img = mlx_xpm_file_to_image(game->mlx, "textures/collectable.xpm", &tile_size, &tile_size);
-    void *exit_img = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm", &tile_size, &tile_size);
+    int tile_size = 3;
+    void *wall_img = mlx_xpm_file_to_image(game->mlx, "textures/wall64.xpm", &tile_size, &tile_size);
+    void *player_img = mlx_xpm_file_to_image(game->mlx, "textures/player64.xpm", &tile_size, &tile_size);
+    void *collectible_img = mlx_xpm_file_to_image(game->mlx, "textures/collectable64.xpm", &tile_size, &tile_size);
+    void *exit_img = mlx_xpm_file_to_image(game->mlx, "textures/exit64.xpm", &tile_size, &tile_size);
+    void *background_img = mlx_xpm_file_to_image(game->mlx, "textures/floor64.xpm", &tile_size, &tile_size);
 
     if (!wall_img || !player_img || !collectible_img || !exit_img)
-    {
-        fprintf(stderr, "Error: Could not load images\n");
         exit(1);
+
+    // Pencereyi temizle
+    mlx_clear_window(game->mlx, game->win);
+
+    // Arka planı önce çizelim
+    for (int y = 0; y < game->map->rows; y++)
+    {
+        for (int x = 0; x < game->map->cols; x++)
+        {
+            mlx_put_image_to_window(game->mlx, game->win, background_img, x * tile_size, y * tile_size);
+        }
     }
 
-    // Haritayı ve diğer öğeleri çiz
+    // Diğer öğeleri ekleyelim
     for (int y = 0; y < game->map->rows; y++)
     {
         for (int x = 0; x < game->map->cols; x++)
@@ -73,7 +104,6 @@ void draw_map(t_game *game)
         }
     }
 
-    // Oyuncuyu çiz
+    // Oyuncuyu en son ekleyelim
     mlx_put_image_to_window(game->mlx, game->win, player_img, game->player->x * tile_size, game->player->y * tile_size);
 }
-
