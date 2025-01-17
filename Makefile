@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Dosya yolları
-SRCS = so_long.c map.c movement.c
+SRCS = so_long.c map.c movement.c free.c map_check.c init_game.c
 OBJS = $(SRCS:.c=.o)
 NAME = so_long
 
