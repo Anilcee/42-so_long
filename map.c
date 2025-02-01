@@ -53,12 +53,12 @@ void count_collectables(t_map *map)
 void draw_map(t_game *game)
 {
     int tile_size = 64; // 64x64 boyutları
-    void *wall_img = mlx_xpm_file_to_image(game->mlx, "textures/wall64.xpm", &tile_size, &tile_size);
-    void *player_img = mlx_xpm_file_to_image(game->mlx, "textures/player64.xpm", &tile_size, &tile_size);
-    void *collectible_img = mlx_xpm_file_to_image(game->mlx, "textures/collectable64.xpm", &tile_size, &tile_size);
+    void *wall_img = mlx_xpm_file_to_image(game->mlx, "textures/blueblock64.xpm", &tile_size, &tile_size);
+    void *player_img = mlx_xpm_file_to_image(game->mlx, "textures/pacman64.xpm", &tile_size, &tile_size);
+    void *collectible_img = mlx_xpm_file_to_image(game->mlx, "textures/pacdot_food.xpm", &tile_size, &tile_size);
     void *exit_img = mlx_xpm_file_to_image(game->mlx, "textures/exit64.xpm", &tile_size, &tile_size);
     void *background_img = mlx_xpm_file_to_image(game->mlx, "textures/floor64.xpm", &tile_size, &tile_size);
-    //mlx_clear_window(game->mlx, game->win);
+    mlx_clear_window(game->mlx, game->win);
     if (!wall_img || !player_img || !collectible_img || !exit_img || !background_img)
     {
         perror("Error loading textures");
@@ -73,9 +73,10 @@ void draw_map(t_game *game)
         for (int x = 0; x < game->map->cols; x++)
         {
             if (game->map->map[y][x] == '0')
-            mlx_put_image_to_window(game->mlx, game->win, background_img, x * tile_size, y * tile_size);
+                continue;
             if(game->map->map[y][x] == 'P')
             {
+            
                 game->player->x = x;
                 game->player->y = y;
                 mlx_put_image_to_window(game->mlx, game->win, player_img, x * tile_size, y * tile_size);

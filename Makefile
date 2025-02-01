@@ -10,7 +10,7 @@ NAME = so_long
 # Minilibx
 MLX_DIR = minilibx
 MLX_LIB = $(MLX_DIR)/libmlx.a
-LINUX_LIBS = -lXext -lX11 -lm
+LINUX_LIBS = -lXext -lX11 
 
 # Libft
 LIBFT_DIR = libft

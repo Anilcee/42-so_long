@@ -87,7 +87,6 @@ void is_valid_map(t_game *game)
     t_map *map = game->map;
     t_player *player = game->player;
 
-    // Harita dosyasını kontrol et.
     if (!map->map)
     {
         perror("Error: Map is empty");
