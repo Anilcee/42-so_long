@@ -1,4 +1,29 @@
 #include "so_long.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// map_check.c içinde
+void dfs(t_game *game, int row, int col, int **visited) { // visited parametresi eklendi
+    if (row < 0 || row >= game->map->rows || col < 0 || col >= game->map->cols) 
+        return;
+    
+    if (visited[row][col] || game->map->map[row][col] == '1') 
+        return;
+    
+    if (game->map->map[row][col] == 'C')
+        game->map->valid_collectables++;
+    if (game->map->map[row][col] == 'E')
+        game->map->valid_exit=1;
+    visited[row][col] = 1;
+    
+    // Tüm çağrılara visited parametresini ekleyin
+    dfs(game, row - 1, col, visited);
+    dfs(game, row + 1, col, visited);
+    dfs(game, row, col - 1, visited);
+    dfs(game, row, col + 1, visited);
+}
+
 
 void is_rectungular_map(t_map *map)
 {
@@ -82,26 +107,48 @@ void find_player_position(t_map *map, t_player *player)
 }
 
 
-void is_valid_map(t_game *game)
-{
+void is_valid_map(t_game *game) {
     t_map *map = game->map;
     t_player *player = game->player;
 
-    if (!map->map)
-    {
+    if (!map->map) {
         perror("Error: Map is empty");
         exit(EXIT_FAILURE);
     }
 
     find_player_position(map, player);
 
-    if (player->x == -1 || player->y == -1)
-    {
+    if (player->x == -1 || player->y == -1) {
         perror("Error: Player not found");
         exit(EXIT_FAILURE);
     }
 
-    count_collectables(map);
+    int **visited = malloc(map->rows * sizeof(int *));
+    for (int i = 0; i < map->rows; i++) {
+        visited[i] = malloc(map->cols * sizeof(int));
+        memset(visited[i], 0, map->cols * sizeof(int));
+    }
+
+    // DFS'i başlat (visited parametresi eklendi)
+    dfs(game, player->y, player->x, visited); // Dikkat: y satır, x sütun!
+    printf("Collectables: %d\n", map->collectables);
+    printf("Valid Collectables: %d\n", map->valid_collectables);
+
+    // Belleği temizle
+    for (int i = 0; i < map->rows; i++) {
+        free(visited[i]);
+    }
+    free(visited);
+    if (map->collectables != map->valid_collectables)
+    {
+        perror("Error: Invalid collectables");
+        exit(EXIT_FAILURE);
+    }
+    if (!map->valid_exit)
+    {
+        perror("Error: Exit not found");
+        exit(EXIT_FAILURE);
+    }
     is_rectungular_map(map);
     is_surrounded_by_walls(map);
 }

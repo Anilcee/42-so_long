@@ -22,6 +22,9 @@ typedef struct s_map
     int rows;
     int cols;
     int collectables;
+    int valid_collectables;
+    int valid_exit;
+    int **visited;
 } t_map;
 
 typedef struct s_player
@@ -49,6 +52,7 @@ void init_player(t_player *player);
 void init_game(t_game *game);
 void check_file_extension(char *file_path);
 int check_valid_path(t_map *map, char **visited, int x, int y);
+void dfs(t_game *game, int row, int col, int **visited);
 void is_rectungular_map(t_map *map);
 void is_surronded_by_walls(t_map *map);
 void is_valid_map(t_game *game);
