@@ -1,100 +1,82 @@
 #include "so_long.h"
 
-void load_map(t_map *map, const char *file_path)
+void	check_file_extension(char *file_path)
 {
-    char *line;
-    char *temp;
-    int fd = open(file_path, O_RDONLY);
-    if (fd < 0)
-        perror("Error opening file");
-    map->rows = 0;
-    map->cols = 0;
-    map->map = NULL;
-    line = ft_strdup("");
-    while ((temp = get_next_line(fd)) != NULL)
-    {
-        line=ft_strjoin(line,temp);
-        free(temp);
-    }
-    map->map=ft_split(line, '\n');
-    free(line);
-    for (int i = 0; map->map[i]; i++)
-    {
-        map->rows++;
-        if (map->cols == 0)
-            map->cols = ft_strlen(map->map[i]);
-    }
-    count_collectables(map);
-    close(fd);
-}
-void count_collectables(t_map *map)
-{
-    int x;
-    int y;
-
-    x = 0;
-    y = 0;
-    map->collectables = 0;
-    while (y < map->rows)
-    {
-        x = 0;
-        while (x < map->cols)
-        {
-            if (map->map[y][x] == 'C')
-                map->collectables++;
-            x++;
-        }
-        y++;
-    }
+	file_path = file_path + ft_strlen(file_path) - 4;
+	if (ft_strncmp(file_path, ".ber", 4) != 0)
+	{
+		ft_printf("Error: Invalid file extension must be .ber");
+		exit(EXIT_FAILURE);
+	}
 }
 
-
-
-void draw_map(t_game *game)
+int	open_file(const char *file_path)
 {
-    int tile_size = 64; // 64x64 boyutları
-    void *wall_img = mlx_xpm_file_to_image(game->mlx, "textures/blueblock64.xpm", &tile_size, &tile_size);
-    void *player_img = mlx_xpm_file_to_image(game->mlx, "textures/pacman64.xpm", &tile_size, &tile_size);
-    void *collectible_img = mlx_xpm_file_to_image(game->mlx, "textures/pacdot_food.xpm", &tile_size, &tile_size);
-    void *exit_img = mlx_xpm_file_to_image(game->mlx, "textures/exit64.xpm", &tile_size, &tile_size);
-    void *background_img = mlx_xpm_file_to_image(game->mlx, "textures/floor64.xpm", &tile_size, &tile_size);
-    mlx_clear_window(game->mlx, game->win);
-    if (!wall_img || !player_img || !collectible_img || !exit_img || !background_img)
-    {
-        perror("Error loading textures");
-        free_images(game->mlx, wall_img, player_img, collectible_img, exit_img, background_img);
-        exit(1);
-    }
-        
-    // Haritayı çizerken, her seferinde sadece arka planı ve diğer öğeleri çiz
+	int	fd;
 
-    for (int y = 0; y < game->map->rows; y++)
-    {
-        for (int x = 0; x < game->map->cols; x++)
-        {
-            if (game->map->map[y][x] == '0')
-                continue;
-            if(game->map->map[y][x] == 'P')
-            {
-            
-                game->player->x = x;
-                game->player->y = y;
-                mlx_put_image_to_window(game->mlx, game->win, player_img, x * tile_size, y * tile_size);
-            }
-            else if (game->map->map[y][x] == '1')
-                mlx_put_image_to_window(game->mlx, game->win, wall_img, x * tile_size, y * tile_size);
-            else if (game->map->map[y][x] == 'C')
-            {
-                mlx_put_image_to_window(game->mlx, game->win, collectible_img, x * tile_size, y * tile_size);
-            }
-            else if (game->map->map[y][x] == 'E')
-                mlx_put_image_to_window(game->mlx, game->win, exit_img, x * tile_size, y * tile_size);
-        }
-    }
+	fd = open(file_path, O_RDONLY);
+	if (fd < 0)
+		exit_with_error("Error opening file");
+	return (fd);
+}
 
-    mlx_put_image_to_window(game->mlx, game->win, background_img, game->player->x * tile_size, game->player->y * tile_size);
-    // Yeni pozisyonda oyuncuyu çiz
-    mlx_put_image_to_window(game->mlx, game->win, player_img, game->player->x * tile_size, game->player->y * tile_size);
-    free_images(game->mlx, wall_img, player_img, collectible_img, exit_img, background_img);
+void	load_map(t_map *map, const char *file_path)
+{
+	char	*line;
+	char	*temp;
+	int		fd;
+	int		i;
 
+	fd = open_file(file_path);
+	line = ft_strdup("");
+	temp = get_next_line(fd);
+	while (temp != NULL)
+	{
+		line = ft_strjoin(line, temp);
+		free(temp);
+		temp = get_next_line(fd);
+	}
+	map->map = ft_split(line, '\n');
+	free(line);
+	i = 0;
+	while (map->map[i])
+	{
+		map->rows++;
+		if (map->cols == 0)
+			map->cols = ft_strlen(map->map[i]);
+		i++;
+	}
+	close(fd);
+}
+
+void	put_object(t_game *game, int x, int y, void *img)
+{
+	mlx_put_image_to_window(game->mlx, game->win,
+		img, x * T_S, y * T_S);
+}
+
+void	draw_map(t_game *game)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	mlx_clear_window(game->mlx, game->win);
+	while (y < game->map->rows)
+	{
+		x = 0;
+		while (x < game->map->cols)
+		{
+			if (game->map->map[y][x] == 'P')
+				put_object(game, x, y, game->img->p_img);
+			else if (game->map->map[y][x] == '1')
+				put_object(game, x, y, game->img->wall);
+			else if (game->map->map[y][x] == 'C')
+				put_object(game, x, y, game->img->coin);
+			else if (game->map->map[y][x] == 'E')
+				put_object(game, x, y, game->img->exit);
+			x++;
+		}
+		y++;
+	}
 }

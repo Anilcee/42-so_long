@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Dosya yolları
-SRCS = so_long.c map.c movement.c free.c map_check.c init_game.c
+SRCS = so_long.c map.c movement.c free.c map_check.c init_game.c map_validation.c
 OBJS = $(SRCS:.c=.o)
 NAME = so_long
 
@@ -19,7 +19,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(MLX_LIB) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) -I$(MLX_DIR) -L$(MLX_DIR) -lmlx $(LINUX_LIBS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(MLX_DIR) -L$(MLX_DIR) -lmlx -L$(LIBFT_DIR) -lft $(LINUX_LIBS)
+
 
 $(MLX_LIB):
 	make -C $(MLX_DIR)

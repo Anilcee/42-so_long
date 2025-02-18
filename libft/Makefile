@@ -35,6 +35,14 @@ SRC	=	ft_atoi.c		\
 		ft_tolower.c	\
 		ft_toupper.c	\
 		get_next_line.c \
+		ft_print_hex.c \
+		ft_print_nbr.c \
+		ft_print_str.c \
+		ft_print_unsigned_nbr.c \
+		ft_print_x.c \
+		ft_printf.c \
+		ft_print_char.c \
+		ft_base.c
 
 OBJS = $(SRC:.c=.o)
 

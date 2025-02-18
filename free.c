@@ -1,40 +1,67 @@
 #include "so_long.h"
 
-int close_window(t_game *game)
+int	close_window(t_game *game)
 {
-    free_map(game->map);
-    if (game->mlx)
-    {
-        mlx_destroy_window(game->mlx, game->win);
-        mlx_destroy_display(game->mlx);
-        free(game->mlx);
-    }
-
-    exit(0);
-    return (0);
+	if (game->map)
+		free_map(game->map);
+	if (game)
+		free_images(game);
+	if (game->mlx)
+	{
+		if (game->win)
+			mlx_destroy_window(game->mlx, game->win);
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+	}
+	exit(0);
+	return (0);
 }
 
-void free_images(void *mlx, void *wall_img, void *player_img, void *collectible_img, void *exit_img, void *background_img)
+void	free_map(t_map *map)
 {
-    if (wall_img)
-        mlx_destroy_image(mlx, wall_img);
-    if (player_img)
-        mlx_destroy_image(mlx, player_img);
-    if (collectible_img)
-        mlx_destroy_image(mlx, collectible_img);
-    if (exit_img)
-        mlx_destroy_image(mlx, exit_img);
-    if (background_img)
-        mlx_destroy_image(mlx, background_img);
+	int	i;
+
+	i = 0;
+	if (map && map->map)
+	{
+		while (i < map->rows)
+		{
+			free(map->map[i]);
+			i++;
+		}
+		free(map->map);
+	}
 }
-void free_map(t_map *map)
+
+void	free_visited(int **visited, t_map *map)
 {
-    if (map && map->map)
-    {
-        for (int i = 0; i < map->rows; i++)
-        {
-            free(map->map[i]);
-        }
-        free(map->map);
-    }
+	int	i;
+
+	i = 0;
+	while (i < map-> rows)
+	{
+		free(visited[i]);
+		i++;
+	}
+	free(visited);
+}
+
+void	free_images(t_game *game)
+{
+	if (!game || !game->img || !game->mlx)
+		return ;
+	if (game->img->p_left)
+		mlx_destroy_image(game->mlx, game->img->p_left);
+	if (game->img->p_right)
+		mlx_destroy_image(game->mlx, game->img->p_right);
+	if (game->img->p_down)
+		mlx_destroy_image(game->mlx, game->img->p_down);
+	if (game->img->p_up)
+		mlx_destroy_image(game->mlx, game->img->p_up);
+	if (game->img->wall)
+		mlx_destroy_image(game->mlx, game->img->wall);
+	if (game->img->coin)
+		mlx_destroy_image(game->mlx, game->img->coin);
+	if (game->img->exit)
+		mlx_destroy_image(game->mlx, game->img->exit);
 }
