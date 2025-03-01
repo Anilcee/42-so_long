@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_check.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/01 17:27:52 by ancengiz          #+#    #+#             */
+/*   Updated: 2025/03/01 17:28:42 by ancengiz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 void	dfs(t_game *game, int row, int col, int **visited)
@@ -70,7 +82,10 @@ void	check_invalid_objects(t_map *map)
 				map->map[y][x] == 'P')
 				x++;
 			else
+			{
+				free_map(map);
 				exit_with_error("Error: Invalid object found in map");
+			}
 		}
 		y++;
 	}
@@ -82,11 +97,23 @@ void	check_objects_in_map(t_map *map)
 	if (!map->map)
 		exit_with_error("Error: Map is empty");
 	if (map->exit != 1)
-		exit_with_error("Error: A lot of exit");
+	{
+		free_map(map);
+		exit_with_error("Error: There must be exactly one exit in the map.");
+	}
 	if (map->player != 1)
-		exit_with_error("Error: A lot of player");
-	if (map->valid_exit != 1)
-		exit_with_error("Error: A lot of exit");
-	if (map->valid_coin != map->coin)
-		exit_with_error("Error: Not all coins are reachable");
+	{
+		free_map(map);
+		exit_with_error("Error: There must be exactly one player in the map.");
+	}
+	if (map->coin == 0)
+	{
+		free_map(map);
+		exit_with_error("Error: There must be at least one coin in the map.");
+	}
+	if (map->exit != map->valid_exit || map->valid_coin != map->coin)
+	{
+		free_map(map);
+		exit_with_error("Error: Not all coins or exit are reachable");
+	}
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_game.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/01 17:27:48 by ancengiz          #+#    #+#             */
+/*   Updated: 2025/03/01 17:27:49 by ancengiz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 void	*convert_image(t_game *game, char *relative_path)
@@ -18,14 +30,15 @@ void	init_images(t_game *game)
 	if (!game || !game->mlx)
 		return ;
 	game->img->p_left = convert_image(game, "textures/pacman_left.xpm");
-	game->img->p_right = convert_image(game, "textures/pacman64.xpm");
+	game->img->p_right = convert_image(game, "textures/pacman.xpm");
 	game->img->p_down = convert_image(game, "textures/pacman_down.xpm");
 	game->img->p_up = convert_image(game, "textures/pacman_up.xpm");
 	game->img->p_img = game->img->p_right;
-	game->img->wall = convert_image(game, "textures/blueblock64.xpm");
-	game->img->coin = convert_image(game, "textures/pacdot_food.xpm");
-	game->img->exit = convert_image(game, "textures/exit64.xpm");
-	if (!game->img->p_img || !game->img->wall || !game->img->coin
+	game->img->wall = convert_image(game, "textures/wall.xpm");
+	game->img->coin = convert_image(game, "textures/coin.xpm");
+	game->img->exit = convert_image(game, "textures/exit.xpm");
+	if (!game->img->p_left || !game->img->p_right || !game->img->p_down
+		|| !game->img->p_up || !game->img->wall || !game->img->coin
 		|| !game->img->exit)
 	{
 		perror("Failed to load one or more images");
@@ -48,7 +61,6 @@ void	init_game(t_game *game)
 	if (!game)
 		return ;
 	init_player(game->player);
-	init_images(game);
 	game->map->coin = 0;
 	game->map->valid_coin = 0;
 	game->map->exit = 0;

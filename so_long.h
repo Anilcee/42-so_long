@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/01 17:28:12 by ancengiz          #+#    #+#             */
+/*   Updated: 2025/03/01 17:28:13 by ancengiz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 # include <stdlib.h>
@@ -86,4 +98,5 @@ void	free_visited(int **array, t_map *map);
 void	check_win(t_game *game);
 void	exit_with_error(char *msg);
 void	*convert_image(t_game *game, char *relative_path);
+void	init_images(t_game *game);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_print_unsigned_nbr.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oislamog <oislamog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 18:52:16 by oislamog          #+#    #+#             */
-/*   Updated: 2025/02/10 17:13:03 by oislamog         ###   ########.fr       */
+/*   Created: 2025/03/01 17:30:16 by ancengiz          #+#    #+#             */
+/*   Updated: 2025/03/01 17:30:17 by ancengiz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

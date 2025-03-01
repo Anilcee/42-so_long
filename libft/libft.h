@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oislamog <oislamog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 21:56:01 by ancengiz          #+#    #+#             */
-/*   Updated: 2025/02/10 17:12:07 by oislamog         ###   ########.fr       */
+/*   Updated: 2025/02/20 06:34:25 by ancengiz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 
 # define BUFFER_SIZE 16
 
-int	ft_printf(const char *a, ...);
-int	ft_print_str(char *c);
-int	ft_print_nbr(int n);
-int	ft_print_char(int c);
-int	ft_print_unsigned_nbr(unsigned int n);
-int	ft_print_hex(void *arg);
-int	ft_print_x(unsigned int nb, int type);
-int	ft_base(unsigned long nb, char *alpha);
+int		ft_printf(const char *a, ...);
+int		ft_print_str(char *c);
+int		ft_print_nbr(int n);
+int		ft_print_char(int c);
+int		ft_print_unsigned_nbr(unsigned int n);
+int		ft_print_hex(void *arg);
+int		ft_print_x(unsigned int nb, int type);
+int		ft_base(unsigned long nb, char *alpha);
 char	*get_next_line(int fd);
 int		ft_atoi(const char *str);
 void	ft_bzero(void *s, size_t n);

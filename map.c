@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ancengiz <ancengiz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/01 17:28:00 by ancengiz          #+#    #+#             */
+/*   Updated: 2025/03/01 17:28:01 by ancengiz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 void	check_file_extension(char *file_path)
@@ -39,11 +51,10 @@ void	load_map(t_map *map, const char *file_path)
 	map->map = ft_split(line, '\n');
 	free(line);
 	i = 0;
-	while (map->map[i])
+	while (map->map && map->map[i])
 	{
 		map->rows++;
-		if (map->cols == 0)
-			map->cols = ft_strlen(map->map[i]);
+		map->cols = ft_strlen(map->map[i]);
 		i++;
 	}
 	close(fd);
